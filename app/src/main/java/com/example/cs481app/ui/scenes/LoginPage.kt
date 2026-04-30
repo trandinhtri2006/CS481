@@ -79,7 +79,7 @@ fun LoginPage(
         verticalArrangement = Arrangement.Center
     ) {
         // Logo or Title
-        Text("Welcome Back")
+        Text("Welcome To AccidentNow Witness Manager")
 
         Spacer(modifier = Modifier.height(32.dp))
 

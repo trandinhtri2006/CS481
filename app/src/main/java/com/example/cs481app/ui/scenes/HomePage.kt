@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
@@ -35,7 +36,7 @@ fun HomePage(
         verticalArrangement = Arrangement.Center
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -43,11 +44,11 @@ fun HomePage(
             )
 
             Spacer(
-                modifier = Modifier.width(50.dp)
+                modifier = Modifier.width(275.dp)
             )
 
             Image(
-                modifier = Modifier.size(50.dp),
+                modifier = Modifier.size(25.dp),
                 painter = painterResource(id = R.drawable.notification_bell),
                 contentDescription = "Notification Bell"
             )

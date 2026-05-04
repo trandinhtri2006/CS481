@@ -3,6 +3,7 @@ package com.example.cs481app.ui.scenes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,6 +39,7 @@ class RegisterViewModel : ViewModel() {
         private set
 
     var errorMessage by mutableStateOf("")
+        private set
 
     fun onEmailChange(newValue: String) {
         userEmail = newValue
@@ -77,67 +79,71 @@ fun RegisterPage(
     navController: NavController,
     viewModel: RegisterViewModel = viewModel()
 ) {
-    Column (
-        Modifier
-            .fillMaxSize()
-            .padding(horizontal = 24.dp)
-            .background(Color.White),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Box (
+        modifier = Modifier.background(Color.White)
     ) {
-        Image(
-            modifier = Modifier.size(300.dp),
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = "Application Logo"
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Email field
-        OutlinedTextField(
-            value = viewModel.userEmail,
-            onValueChange = viewModel::onEmailChange,
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Password field
-        OutlinedTextField(
-            value = viewModel.userPassword,
-            onValueChange = viewModel::onPasswordChange,
-            label = { Text("Password") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Confirm Password field
-        OutlinedTextField(
-            value = viewModel.userConPassword,
-            onValueChange = viewModel::onConPasswordChange,
-            label = { Text("Confirm Password") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (!viewModel.errorMessage.isBlank()) {
-            Text(
-                text  = viewModel.errorMessage,
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall
+        Column(
+            Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(
+                modifier = Modifier.size(300.dp),
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Application Logo"
             )
 
-            Spacer(modifier = Modifier.height(15.dp))
-        }
+            Spacer(modifier = Modifier.height(32.dp))
 
-        Button(
-            onClick = {viewModel.valid { navController.navigate(Routes.LOGIN_PAGE) }},
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Create An Account")
+            // Email field
+            OutlinedTextField(
+                value = viewModel.userEmail,
+                onValueChange = viewModel::onEmailChange,
+                label = { Text("Email") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Password field
+            OutlinedTextField(
+                value = viewModel.userPassword,
+                onValueChange = viewModel::onPasswordChange,
+                label = { Text("Password") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Confirm Password field
+            OutlinedTextField(
+                value = viewModel.userConPassword,
+                onValueChange = viewModel::onConPasswordChange,
+                label = { Text("Confirm Password") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (!viewModel.errorMessage.isBlank()) {
+                Text(
+                    text = viewModel.errorMessage,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall
+                )
+
+                Spacer(modifier = Modifier.height(15.dp))
+            }
+
+            Button(
+                onClick = { viewModel.valid { navController.navigate(Routes.LOGIN_PAGE) } },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Create An Account")
+            }
         }
     }
 }

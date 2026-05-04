@@ -2,6 +2,7 @@ package com.example.cs481app.ui.scenes
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,9 +26,9 @@ fun InitialPage(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 100.dp)
             .background(Color.White),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Image(
             modifier = Modifier.size(300.dp),

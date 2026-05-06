@@ -41,7 +41,6 @@ fun HomePage(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .clickable { navController.navigate(Routes.INITIAL_PAGE) }
             .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween

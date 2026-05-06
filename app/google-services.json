@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "69895617351",
+    "project_id": "cs481app",
+    "storage_bucket": "cs481app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69895617351:android:9b54c98e3b89423c5daa62",
+        "android_client_info": {
+          "package_name": "com.example.cs481app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSMPwUTh9Yd1-zSwQGv5duiTuhEhU3gMQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

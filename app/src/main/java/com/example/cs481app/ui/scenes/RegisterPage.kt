@@ -25,9 +25,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.cs481app.R
+import com.example.cs481app.ui.Auth.createUser
+import com.example.cs481app.ui.Auth.logIn
+import kotlinx.coroutines.launch
 
 
 class RegisterViewModel : ViewModel() {
@@ -54,26 +58,19 @@ class RegisterViewModel : ViewModel() {
     }
 
     fun valid(onSuccess: () -> Unit) {
-        if (validation()) {
-            onSuccess()
-        }
-    }
-
-    private fun validation(): Boolean {
-        if (
-            userPassword.equals(userConPassword, ignoreCase = false)
-            and !userPassword.isBlank()
-            and !userConPassword.isBlank()
-            )
-        {
-            // Implement userEmail constraints
-            return true
-        } else {
-            errorMessage = "Need Implementation"
-            return false
+        viewModelScope.launch {
+            try {
+                createUser(userEmail, userPassword, userConPassword)
+                onSuccess()
+            } catch (e: IllegalArgumentException) {
+                errorMessage = e.message.toString()
+            } catch (e: Exception) {
+                errorMessage = "Something went wrong: ${e.message}"
+            }
         }
     }
 }
+
 @Composable
 fun RegisterPage(
     navController: NavController,

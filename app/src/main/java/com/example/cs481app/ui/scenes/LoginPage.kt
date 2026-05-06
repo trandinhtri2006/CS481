@@ -25,12 +25,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.cs481app.R
+import com.example.cs481app.ui.Auth.logIn
+import kotlinx.coroutines.launch
 
 
 class LoginViewModel : ViewModel() {
@@ -52,21 +54,18 @@ class LoginViewModel : ViewModel() {
     }
 
     fun valid(onSuccess: () -> Unit) {
-        if (validation()) {
-            onSuccess()
+        viewModelScope.launch {
+            try {
+                logIn(userEmail, userPassword)
+                onSuccess()
+            } catch (e: IllegalArgumentException) {
+                errorMessage = e.message.toString()
+            } catch (e: Exception) {
+                errorMessage = "Something went wrong: ${e.message}"
+            }
         }
     }
 
-    private fun validation(): Boolean {
-        // email: admin && pass: admin
-        if (userEmail.equals("admin", ignoreCase = true)
-            and userPassword.equals("admin", ignoreCase = true)) {
-            return true
-        } else {
-            errorMessage = "Need implementation"
-            return false
-        }
-    }
 }
 
 @Composable

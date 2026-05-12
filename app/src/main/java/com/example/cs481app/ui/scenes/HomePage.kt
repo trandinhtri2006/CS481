@@ -1,6 +1,5 @@
 package com.example.cs481app.ui.scenes
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +15,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
@@ -24,131 +26,230 @@ import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.NotificationsActive
+import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 
 
 @Composable
 fun HomePage(
     navController: NavController
 ) {
-    val name = "TONY"
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        // Top Row
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .size(75.dp)
-                .background(Color.Black),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Hey $name", fontSize = 36.sp, color = Color.White, modifier = Modifier.padding(10.dp))
+    val name = "Tony"
 
-            BadgedBox(
-                badge = {
-                    Badge { Text("5") }  // number of notifications
-                }
+    Scaffold(
+        bottomBar = {
+            NavigationBar(
+                containerColor = Color.Black
             ) {
-                IconButton(onClick = { /* open notifications */ }) {
-                    Icon(
-                        imageVector = Icons.Filled.Notifications,
-                        contentDescription = "Notifications",
-                        modifier = Modifier.size(100.dp),
-                        tint = Color.White
+                NavigationBarItem(
+                    selected = true,
+                    onClick = { navController.navigate(Routes.HOME_PAGE) },
+                    icon = {
+                        Icon(
+                            Icons.Default.Home,
+                            contentDescription = "Home"
+                        )
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = Color.White,
+                        unselectedIconColor = Color.Gray,
+                        indicatorColor = Color.DarkGray
+                    )
+                )
+
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { navController.navigate(Routes.REPORT_PAGE) },
+                    icon = {
+                        Icon(
+                            Icons.Default.Description,
+                            contentDescription = "Report"
+                        )
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = Color.White,
+                        unselectedIconColor = Color.Gray,
+                        indicatorColor = Color.DarkGray
+                    )
+                )
+
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { navController.navigate(Routes.HISTORY_PAGE) },
+                    icon = {
+                        Icon(
+                            Icons.Default.AccessTime,
+                            contentDescription = "History"
+                        )
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = Color.White,
+                        unselectedIconColor = Color.Gray,
+                        indicatorColor = Color.DarkGray
+                    )
+                )
+
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { navController.navigate(Routes.SETTING_PAGE) },
+                    icon = {
+                        Icon(
+                            Icons.Default.AccountBox,
+                            contentDescription = "Profile"
+                        )
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = Color.White,
+                        unselectedIconColor = Color.Gray,
+                        indicatorColor = Color.DarkGray
+                    )
+                )
+            }
+        },
+        floatingActionButton = {
+            // QUESTION MARK BUTTON
+            FloatingActionButton(
+                onClick = {
+                    // Open AI assistant or help page
+                    navController.navigate(Routes.AI_CHATBOX)
+                },
+                containerColor = Color.Black
+            ) {
+                Icon(
+                    imageVector = Icons.Default.QuestionMark,
+                    contentDescription = "AI Assistant help",
+                    tint = Color.White
+                )
+            }
+        }
+    ) { paddingValues ->
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .background(Color(0xFFF5F5F5))
+                .padding(horizontal = 20.dp, vertical = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            // Header
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Column {
+                    Text(
+                        text = "Welcome Back,",
+                        fontSize = 18.sp,
+                        color = Color.Gray
+                    )
+
+                    Text(
+                        text = name,
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
                     )
                 }
-            }
-        }
 
-        // Center content
-        Box(
-            modifier = Modifier
-                .size(300.dp)
-                .clip(CircleShape)
-                .background(Color.Red),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(35.dp),
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.NotificationsActive,
-                    contentDescription = "Notifications",
-                    modifier = Modifier.size(150.dp),
-                    tint = Color.White
-                )
-                Text(text = "Call 911", fontSize = 50.sp, color = Color.White)
-            }
-        }
-
-        // Bottom Row
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .size(75.dp)
-                .background(Color.Black),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(
-                onClick = {navController.navigate(Routes.HOME_PAGE)}
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Home,
-                    contentDescription = "HomeButton",
-                    modifier = Modifier.size(50.dp),
-                    tint = Color.White
-                )
+                BadgedBox(
+                    badge = {
+                        Badge {
+                            Text("5")
+                        }
+                    }
+                ) {
+                    IconButton(onClick = { }) {
+                        Icon(
+                            imageVector = Icons.Default.Notifications,
+                            contentDescription = "Notifications",
+                            modifier = Modifier.size(30.dp),
+                            tint = Color.Black
+                        )
+                    }
+                }
             }
 
-            IconButton(
-                onClick = {navController.navigate(Routes.HOME_PAGE)}
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Description,
-                    contentDescription = "Report",
-                    modifier = Modifier.size(50.dp),
-                    tint = Color.White
+            Spacer(modifier = Modifier.height(60.dp))
+
+            // Emergency Button
+            Card(
+                modifier = Modifier.size(280.dp),
+                shape = CircleShape,
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 12.dp
+                ),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFD32F2F)
                 )
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+
+                        Icon(
+                            imageVector = Icons.Default.NotificationsActive,
+                            contentDescription = "Emergency",
+                            modifier = Modifier.size(90.dp),
+                            tint = Color.White
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = "CALL 911",
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = "Tap for emergency help",
+                            fontSize = 14.sp,
+                            color = Color.White.copy(alpha = 0.85f)
+                        )
+                    }
+                }
             }
 
-            IconButton(
-                onClick = {navController.navigate(Routes.HISTORY_PAGE)}
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.AccessTime,
-                    contentDescription = "History",
-                    modifier = Modifier.size(50.dp),
-                    tint = Color.White
-                )
-            }
+            Spacer(modifier = Modifier.weight(1f))
 
-            IconButton(
-                onClick = {navController.navigate(Routes.ACCOUNT_PAGE)}
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.AccountBox,
-                    contentDescription = "Profile",
-                    modifier = Modifier.size(50.dp),
-                    tint = Color.White
-                )
-            }
+
         }
     }
+
+
+}
+
+@Preview
+@Composable
+fun Homepage_Preview() {
+    HomePage(rememberNavController())
 }

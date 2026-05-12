@@ -54,15 +54,21 @@ class LoginViewModel : ViewModel() {
     }
 
     fun valid(onSuccess: () -> Unit) {
-        viewModelScope.launch {
-            try {
-                logIn(userEmail, userPassword)
-                onSuccess()
-            } catch (e: IllegalArgumentException) {
-                errorMessage = e.message.toString()
-            } catch (e: Exception) {
-                errorMessage = "Something went wrong: ${e.message}"
-            }
+//        viewModelScope.launch {
+//            try {
+//                logIn(userEmail, userPassword)
+//                onSuccess()
+//            } catch (e: IllegalArgumentException) {
+//                errorMessage = e.message.toString()
+//            } catch (e: Exception) {
+//                errorMessage = "Something went wrong: ${e.message}"
+//            }
+//        }
+
+        if (userEmail.equals("admin", ignoreCase = false) and userPassword.equals("admin", ignoreCase = false)) {
+            onSuccess()
+        } else {
+            errorMessage = "Wrong credentials"
         }
     }
 

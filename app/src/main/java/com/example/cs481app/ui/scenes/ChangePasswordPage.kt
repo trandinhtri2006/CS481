@@ -63,19 +63,35 @@ class ChangePasswordPageViewModel : ViewModel() {
     }
 }
 
+
+// CHANGE PASSWORD SCREEN
+// Allows user to update their password after verifying old credentials
+// Uses ViewModel to manage input state and validation logic
 @Composable
 fun ChangePasswordPage(
     navController: NavController,
+
+    // ViewModel holds UI state and business logic
     viewModel: ChangePasswordPageViewModel = viewModel()
 ) {
+
+    // Full-screen container
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
 
-        BackButton(navController, Routes.ACCOUNT_PAGE, modifier = Modifier.align(Alignment.TopStart))
+        // Back button to return to account screen
+        BackButton(
+            navController,
+            Routes.ACCOUNT_PAGE,
+            modifier = Modifier.align(Alignment.TopStart)
+        )
 
+
+        // FORM CONTAINER
+        // Centered input form
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -84,38 +100,62 @@ fun ChangePasswordPage(
             verticalArrangement = Arrangement.Center
         ) {
 
-            // Email
+            // EMAIL INPUT FIELD
+            // Used to verify user identity
             OutlinedTextField(
                 value = viewModel.userEmail,
+
+                // Updates email state in ViewModel
                 onValueChange = viewModel::onEmailChange,
+
                 label = { Text("Email") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Old password
+
+            // OLD PASSWORD FIELD
+            // Required for authentication before update
             OutlinedTextField(
                 value = viewModel.oldPassword,
+
+                // Updates old password state in ViewModel
                 onValueChange = viewModel::onOldPassChange,
+
                 label = { Text("Old Password") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // New password
+
+            // NEW PASSWORD FIELD
+            // User enters updated password
             OutlinedTextField(
                 value = viewModel.newPassword,
+
+                // Updates new password state in ViewModel
                 onValueChange = viewModel::onNewPassChange,
+
                 label = { Text("New Password") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
+
+            // UPDATE BUTTON
+            // Triggers validation + password update logic
             Button(
-                onClick = { viewModel.valid { navController.navigate(Routes.ACCOUNT_PAGE) } }
+                onClick = {
+
+                    // Validate inputs and update password
+                    // Navigate back to account screen on success
+                    viewModel.valid {
+                        navController.navigate(Routes.ACCOUNT_PAGE)
+                    }
+                }
             ) {
                 Text("Update Password")
             }

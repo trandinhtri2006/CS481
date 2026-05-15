@@ -1,19 +1,7 @@
 package com.example.cs481app.ui.scenes
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -23,24 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.SmartToy
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,13 +24,21 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
+
+// AI CHAT SCREEN
+// Main composable that renders chat UI with AI assistant
 @Composable
 fun AIChatBoxPage(
     navController: NavController
 ) {
 
+    
+    // STATE: current input text
     var message by remember { mutableStateOf("") }
 
+    
+    // STATE: chat message list
+    // Uses mutableStateList so UI updates automatically
     val messages = remember {
         mutableStateListOf(
             ChatMessage(
@@ -68,16 +48,23 @@ fun AIChatBoxPage(
         )
     }
 
+    // Controls scroll position of chat list
     val listState = rememberLazyListState()
 
+    // Auto-scroll to latest message whenever list updates
     LaunchedEffect(messages.size) {
         if (messages.isNotEmpty()) {
             listState.animateScrollToItem(messages.size - 1)
         }
     }
 
+    
+    // MAIN SCREEN STRUCTURE
     Scaffold(
         containerColor = Color(0xFFF3F4F6),
+
+        
+        // TOP BAR (HEADER)
         topBar = {
 
             Surface(
@@ -91,12 +78,11 @@ fun AIChatBoxPage(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(
-                            horizontal = 18.dp,
-                            vertical = 14.dp
-                        ),
+                        .padding(horizontal = 18.dp, vertical = 14.dp),
                     verticalAlignment = Alignment.Bottom
                 ) {
+
+                    // BACK BUTTON
                     IconButton(
                         onClick = {
                             navController.navigate(Routes.HOME_PAGE)
@@ -110,7 +96,7 @@ fun AIChatBoxPage(
 
                     Spacer(modifier = Modifier.width(6.dp))
 
-                    // AI ICON
+                    // AI ICON CIRCLE
                     Box(
                         modifier = Modifier
                             .size(52.dp)
@@ -118,7 +104,6 @@ fun AIChatBoxPage(
                             .background(Color.Black),
                         contentAlignment = Alignment.Center
                     ) {
-
                         Icon(
                             imageVector = Icons.Default.SmartToy,
                             contentDescription = "AI",
@@ -129,8 +114,10 @@ fun AIChatBoxPage(
 
                     Spacer(modifier = Modifier.width(14.dp))
 
+                    // TITLE SECTION
                     Column(
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
                             .align(Alignment.Bottom)
                     ) {
                         Text(
@@ -142,15 +129,19 @@ fun AIChatBoxPage(
                 }
             }
         }
+
     ) { paddingValues ->
 
+        
+        // MAIN CHAT LAYOUT
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
 
-            // CHAT AREA
+            
+            // CHAT MESSAGES LIST
             LazyColumn(
                 state = listState,
                 modifier = Modifier
@@ -158,19 +149,16 @@ fun AIChatBoxPage(
                     .fillMaxWidth()
                     .padding(horizontal = 14.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
-                contentPadding = PaddingValues(
-                    top = 18.dp,
-                    bottom = 18.dp
-                )
+                contentPadding = PaddingValues(top = 18.dp, bottom = 18.dp)
             ) {
 
                 items(messages) { chat ->
-
                     ModernChatBubble(chat)
                 }
             }
 
-            // INPUT AREA
+            
+            // MESSAGE INPUT AREA
             Surface(
                 shadowElevation = 12.dp,
                 color = Color.White
@@ -179,22 +167,16 @@ fun AIChatBoxPage(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(
-                            horizontal = 12.dp,
-                            vertical = 10.dp
-                        ),
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
                     verticalAlignment = Alignment.Bottom
                 ) {
 
+                    // TEXT INPUT FIELD
                     OutlinedTextField(
                         value = message,
-                        onValueChange = {
-                            message = it
-                        },
+                        onValueChange = { message = it },
                         modifier = Modifier.weight(1f),
-                        placeholder = {
-                            Text("Ask me anything...")
-                        },
+                        placeholder = { Text("Ask me anything...") },
                         shape = RoundedCornerShape(28.dp),
                         maxLines = 5,
                         colors = OutlinedTextFieldDefaults.colors(
@@ -205,11 +187,14 @@ fun AIChatBoxPage(
 
                     Spacer(modifier = Modifier.width(10.dp))
 
+                    // SEND BUTTON
                     FloatingActionButton(
                         onClick = {
 
+                            // Only send if message is not empty
                             if (message.isNotBlank()) {
 
+                                // Add user message to chat
                                 messages.add(
                                     ChatMessage(
                                         text = message,
@@ -217,6 +202,7 @@ fun AIChatBoxPage(
                                     )
                                 )
 
+                                // Simulated AI response (placeholder logic)
                                 messages.add(
                                     ChatMessage(
                                         text = "I'm analyzing your request: \"$message\"",
@@ -224,6 +210,7 @@ fun AIChatBoxPage(
                                     )
                                 )
 
+                                // Clear input field after sending
                                 message = ""
                             }
                         },
@@ -233,7 +220,6 @@ fun AIChatBoxPage(
                             defaultElevation = 6.dp
                         )
                     ) {
-
                         Icon(
                             imageVector = Icons.Default.Send,
                             contentDescription = "Send",
@@ -247,11 +233,15 @@ fun AIChatBoxPage(
 }
 
 
+
+// CHAT BUBBLE UI COMPONENT
+// Displays individual user or AI messages
 @Composable
 fun ModernChatBubble(
     chat: ChatMessage
 ) {
 
+    // Align message left (AI) or right (User)
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = if (chat.isUser)
@@ -260,13 +250,11 @@ fun ModernChatBubble(
             Arrangement.Start
     ) {
 
-        Row(
-            verticalAlignment = Alignment.Bottom
-        ) {
+        Row(verticalAlignment = Alignment.Bottom) {
 
-            // AI AVATAR
+            
+            // AI AVATAR (ONLY FOR AI MESSAGES)
             if (!chat.isUser) {
-
                 Box(
                     modifier = Modifier
                         .padding(end = 8.dp)
@@ -275,7 +263,6 @@ fun ModernChatBubble(
                         .background(Color.Black),
                     contentAlignment = Alignment.Center
                 ) {
-
                     Icon(
                         imageVector = Icons.Default.SmartToy,
                         contentDescription = "AI",
@@ -285,6 +272,8 @@ fun ModernChatBubble(
                 }
             }
 
+            
+            // MESSAGE CARD
             Card(
                 shape = RoundedCornerShape(
                     topStart = 24.dp,
@@ -298,28 +287,23 @@ fun ModernChatBubble(
                     else
                         Color.White
                 ),
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 2.dp
-                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                 modifier = Modifier.widthIn(max = 310.dp)
             ) {
 
-                Column(
-                    modifier = Modifier.padding(14.dp)
-                ) {
+                Column(modifier = Modifier.padding(14.dp)) {
 
+                    // MESSAGE TEXT
                     Text(
                         text = chat.text,
-                        color = if (chat.isUser)
-                            Color.White
-                        else
-                            Color.Black,
+                        color = if (chat.isUser) Color.White else Color.Black,
                         fontSize = 16.sp,
                         lineHeight = 22.sp
                     )
 
                     Spacer(modifier = Modifier.height(6.dp))
 
+                    // TIMESTAMP (STATIC FOR NOW)
                     Text(
                         text = "Just now",
                         fontSize = 11.sp,
@@ -336,11 +320,15 @@ fun ModernChatBubble(
 }
 
 
+// DATA MODEL
+// Represents a single chat message
 data class ChatMessage(
     val text: String,
     val isUser: Boolean
 )
 
+
+// PREVIEW (Android Studio)
 @Preview
 @Composable
 fun AI_Preview() {

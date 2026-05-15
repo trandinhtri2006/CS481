@@ -16,21 +16,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,98 +37,48 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
+// SETTINGS SCREEN
+// Displays user profile info, account actions, and logout option
 @Composable
 fun SettingPage(
     navController: NavController
 ) {
+
+    // SCAFFOLD LAYOUT
+    // Provides bottom navigation bar and main content area
     Scaffold(
+
+        // Bottom navigation bar (shared across app screens)
         bottomBar = {
-            NavigationBar(
-                containerColor = Color.Black
-            ) {
-                NavigationBarItem(
-                    selected = false,
-                    onClick = { navController.navigate(Routes.HOME_PAGE) },
-                    icon = {
-                        Icon(
-                            Icons.Default.Home,
-                            contentDescription = "Home"
-                        )
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        unselectedIconColor = Color.Gray,
-                        indicatorColor = Color.DarkGray
-                    )
-                )
-
-                NavigationBarItem(
-                    selected = false,
-                    onClick = { navController.navigate(Routes.REPORT_PAGE) },
-                    icon = {
-                        Icon(
-                            Icons.Default.Description,
-                            contentDescription = "Report"
-                        )
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        unselectedIconColor = Color.Gray,
-                        indicatorColor = Color.DarkGray
-                    )
-                )
-
-                NavigationBarItem(
-                    selected = false,
-                    onClick = { navController.navigate(Routes.HISTORY_PAGE) },
-                    icon = {
-                        Icon(
-                            Icons.Default.AccessTime,
-                            contentDescription = "History"
-                        )
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        unselectedIconColor = Color.Gray,
-                        indicatorColor = Color.DarkGray
-                    )
-                )
-
-                NavigationBarItem(
-                    selected = true,
-                    onClick = { navController.navigate(Routes.ACCOUNT_PAGE) },
-                    icon = {
-                        Icon(
-                            Icons.Default.AccountBox,
-                            contentDescription = "Profile"
-                        )
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        unselectedIconColor = Color.Gray,
-                        indicatorColor = Color.DarkGray
-                    )
-                )
-            }
+            Bottombar(
+                homePage = false,
+                reportPage = false,
+                settingPage = true, // current active tab
+                historyPage = false,
+                navController = navController
+            )
         }
+
     ) { paddingValues ->
 
+        // MAIN CONTENT COLUMN
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+
+                // Enables vertical scrolling if content overflows
                 .verticalScroll(rememberScrollState())
+
                 .padding(horizontal = 20.dp, vertical = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // PROFILE SECTION
+            // PROFILE CARD SECTION
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(28.dp),
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 8.dp
-                )
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
 
                 Column(
@@ -146,7 +88,7 @@ fun SettingPage(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    // PROFILE IMAGE
+                    // PROFILE AVATAR
                     Box(
                         modifier = Modifier
                             .size(120.dp)
@@ -155,6 +97,7 @@ fun SettingPage(
                         contentAlignment = Alignment.Center
                     ) {
 
+                        // Default profile icon (placeholder avatar)
                         Icon(
                             imageVector = Icons.Default.Person,
                             contentDescription = "Profile",
@@ -165,6 +108,7 @@ fun SettingPage(
 
                     Spacer(modifier = Modifier.height(18.dp))
 
+                    // USER NAME DISPLAY
                     Text(
                         text = "Tony Stark",
                         fontSize = 28.sp,
@@ -173,6 +117,7 @@ fun SettingPage(
 
                     Spacer(modifier = Modifier.height(4.dp))
 
+                    // USER EMAIL DISPLAY
                     Text(
                         text = "tony@email.com",
                         color = Color.Gray,
@@ -181,13 +126,19 @@ fun SettingPage(
 
                     Spacer(modifier = Modifier.height(18.dp))
 
+                    // EDIT PROFILE BUTTON
                     Button(
-                        onClick = { navController.navigate(Routes.ACCOUNT_PAGE)},
+                        onClick = {
+                            // Navigate to account edit screen
+                            navController.navigate(Routes.ACCOUNT_PAGE)
+                        },
                         shape = RoundedCornerShape(16.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Black
                         )
                     ) {
+
+                        // Edit icon
                         Icon(
                             imageVector = Icons.Default.Edit,
                             contentDescription = "Edit",
@@ -206,7 +157,7 @@ fun SettingPage(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // ACCOUNT INFORMATION
+            // SECTION HEADER
             Text(
                 text = "Personal Information",
                 modifier = Modifier.fillMaxWidth(),
@@ -215,9 +166,15 @@ fun SettingPage(
                 color = Color.DarkGray
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+
             // LOGOUT BUTTON
             Button(
-                onClick = { navController.navigate(Routes.INITIAL_PAGE)},
+                onClick = {
+                    // Navigate back to initial/login screen
+                    navController.navigate(Routes.INITIAL_PAGE)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
@@ -227,8 +184,9 @@ fun SettingPage(
                 )
             ) {
 
+                // Logout icon
                 Icon(
-                    imageVector = Icons.Default.Logout,
+                    imageVector = Icons.AutoMirrored.Filled.Logout,
                     contentDescription = "Logout",
                     tint = Color.White
                 )
@@ -248,6 +206,9 @@ fun SettingPage(
     }
 }
 
+
+// PREVIEW FUNCTION
+// Used for Android Studio UI preview
 @Preview
 @Composable
 fun SettingPage_Preview() {

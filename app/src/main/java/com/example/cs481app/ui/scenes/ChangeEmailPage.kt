@@ -58,19 +58,35 @@ class ChangeEmailViewModel : ViewModel() {
     }
 }
 
+// CHANGE EMAIL SCREEN
+// Allows user to update their account email address
+// Uses a ViewModel for state management and validation
 @Composable
 fun ChangeEmailPage(
     navController: NavController,
+
+    // ViewModel handles input state + validation logic
     viewModel: ChangeEmailViewModel = viewModel()
 ) {
+
+    // Full-screen container
     Box(
         modifier = Modifier
-        .fillMaxSize()
-        .background(Color.White)
+            .fillMaxSize()
+            .background(Color.White)
     ) {
 
-        BackButton(navController, Routes.ACCOUNT_PAGE, modifier = Modifier.align(Alignment.TopStart))
 
+        // BACK NAVIGATION BUTTON
+        // Returns user to account page
+        BackButton(
+            navController,
+            Routes.ACCOUNT_PAGE,
+            modifier = Modifier.align(Alignment.TopStart)
+        )
+
+        // MAIN FORM CONTENT
+        // Centered vertically and horizontally
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -79,28 +95,46 @@ fun ChangeEmailPage(
             verticalArrangement = Arrangement.Center
         ) {
 
-            // Current Email
+
+            // CURRENT EMAIL INPUT FIELD
             OutlinedTextField(
                 value = viewModel.userCurrEmail,
+
+                // Updates current email state in ViewModel
                 onValueChange = viewModel::onCurrEmailChange,
+
                 label = { Text("Old Email") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // New Email
+
+            // NEW EMAIL INPUT FIELD
             OutlinedTextField(
                 value = viewModel.userNewEmail,
+
+                // Updates new email state in ViewModel
                 onValueChange = viewModel::onNewEmailChange,
+
                 label = { Text("New Email") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
+
+            // SUBMIT BUTTON
+            // Triggers validation + email update process
             Button(
-                onClick = { viewModel.valid { navController.navigate(Routes.ACCOUNT_PAGE) } }
+                onClick = {
+
+                    // Validate input and update email
+                    // On success, navigate back to account page
+                    viewModel.valid {
+                        navController.navigate(Routes.ACCOUNT_PAGE)
+                    }
+                }
             ) {
                 Text("Change Email")
             }

@@ -48,10 +48,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
+// HISTORY SCREEN
+// Displays a list of previous AI chat conversations
 @Composable
 fun HistoryPage(
     navController: NavController
 ) {
+
+    // STATIC CHAT HISTORY DATA
+    // Probably come from a database or API
     val chatHistoryList: List<ChatHistory> = listOf(
 
         ChatHistory(
@@ -85,77 +90,24 @@ fun HistoryPage(
         )
     )
 
+
+    // SCREEN STRUCTURE
+    // Includes bottom navigation bar + content area
     Scaffold(
+
         bottomBar = {
-            NavigationBar(
-                containerColor = Color.Black
-            ) {
-                NavigationBarItem(
-                    selected = false,
-                    onClick = { navController.navigate(Routes.HOME_PAGE) },
-                    icon = {
-                        Icon(
-                            Icons.Default.Home,
-                            contentDescription = "Home"
-                        )
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        unselectedIconColor = Color.Gray,
-                        indicatorColor = Color.DarkGray
-                    )
-                )
-
-                NavigationBarItem(
-                    selected = false,
-                    onClick = { navController.navigate(Routes.REPORT_PAGE) },
-                    icon = {
-                        Icon(
-                            Icons.Default.Description,
-                            contentDescription = "Report"
-                        )
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        unselectedIconColor = Color.Gray,
-                        indicatorColor = Color.DarkGray
-                    )
-                )
-
-                NavigationBarItem(
-                    selected = true,
-                    onClick = { navController.navigate(Routes.HISTORY_PAGE) },
-                    icon = {
-                        Icon(
-                            Icons.Default.AccessTime,
-                            contentDescription = "History"
-                        )
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        unselectedIconColor = Color.Gray,
-                        indicatorColor = Color.DarkGray
-                    )
-                )
-
-                NavigationBarItem(
-                    selected = false,
-                    onClick = { navController.navigate(Routes.SETTING_PAGE) },
-                    icon = {
-                        Icon(
-                            Icons.Default.AccountBox,
-                            contentDescription = "Profile"
-                        )
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        unselectedIconColor = Color.Gray,
-                        indicatorColor = Color.DarkGray
-                    )
-                )
-            }
+            Bottombar(
+                homePage = false,
+                reportPage = false,
+                settingPage = false,
+                historyPage = true, // current active tab
+                navController = navController
+            )
         }
+
     ) { paddingValues ->
+
+        // MAIN CONTENT LAYOUT
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -165,7 +117,8 @@ fun HistoryPage(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // HEADER TEXT
+
+            // PAGE HEADER
             Text(
                 text = "Recent Conversations",
                 fontSize = 26.sp,
@@ -182,23 +135,26 @@ fun HistoryPage(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // CHAT LIST
+
+            // CHAT HISTORY LIST
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
 
                 items(chatHistoryList) { chat ->
 
+                    // Each chat item rendered as a card
                     HistoryCard(
                         chat = chat,
                         onClick = {
 
-                            // OPEN CHAT
+                            // Navigate to AI chat screen when clicked
                             navController.navigate(Routes.AI_CHATBOX)
                         }
                     )
                 }
 
+                // Extra spacing at bottom of list
                 item {
                     Spacer(modifier = Modifier.height(30.dp))
                 }
@@ -207,6 +163,9 @@ fun HistoryPage(
     }
 }
 
+
+// HISTORY CARD COMPONENT
+// Displays a single chat history entry
 @Composable
 fun HistoryCard(
     chat: ChatHistory,
@@ -216,16 +175,13 @@ fun HistoryCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                onClick()
-            },
+
+            // Make entire card clickable
+            .clickable { onClick() },
+
         shape = RoundedCornerShape(22.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 5.dp
-        ),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        )
+        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
 
         Row(
@@ -235,7 +191,8 @@ fun HistoryCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            // ICON
+
+            // CHAT ICON
             Box(
                 modifier = Modifier
                     .size(58.dp)
@@ -254,11 +211,11 @@ fun HistoryCard(
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            // TEXT SECTION
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
 
+            // TEXT CONTENT SECTION
+            Column(modifier = Modifier.weight(1f)) {
+
+                // Chat title
                 Text(
                     text = chat.title,
                     fontSize = 18.sp,
@@ -269,6 +226,7 @@ fun HistoryCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
+                // Chat preview message
                 Text(
                     text = chat.preview,
                     color = Color.Gray,
@@ -279,6 +237,7 @@ fun HistoryCard(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+                // Timestamp
                 Text(
                     text = chat.time,
                     color = Color.DarkGray,
@@ -288,6 +247,7 @@ fun HistoryCard(
 
             Spacer(modifier = Modifier.width(10.dp))
 
+            // Right arrow indicator
             Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,
                 contentDescription = "Open Chat",
@@ -297,12 +257,17 @@ fun HistoryCard(
     }
 }
 
+
+// DATA MODEL
+// Represents a single chat history item
 data class ChatHistory(
     val title: String,
     val preview: String,
     val time: String
 )
 
+
+// PREVIEW FUNCTION
 @Preview
 @Composable
 fun HistoryPreview() {

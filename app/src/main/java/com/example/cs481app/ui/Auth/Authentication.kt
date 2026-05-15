@@ -8,6 +8,8 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.tasks.await
 
+// CREATE USER FUNCTION
+// Creates a new Firebase user account
 suspend fun createUser(email: String, password: String, confirmPassword: String): Boolean {
     // Email validation
     require(email.isNotBlank())
@@ -30,16 +32,36 @@ suspend fun createUser(email: String, password: String, confirmPassword: String)
     { "Password and Confirm Password do not match." }
 
     return try {
+
+        // Create user account in Firebase Authentication
         Firebase.auth
             .createUserWithEmailAndPassword(email, password)
+
+            // Wait for Firebase request to complete
             .await()
+
+        // Return true if account creation succeeds
         true
-    } catch (e: FirebaseAuthUserCollisionException) {
-        throw IllegalArgumentException("An account with this email already exists.")
-    } catch (e: FirebaseAuthWeakPasswordException) {
-        throw IllegalArgumentException("Password is too weak.")
-    } catch (e: Exception) {
-        throw Exception("Something went wrong: ${e.message}")
+    }
+    // Email already exists in Firebase
+    catch (e: FirebaseAuthUserCollisionException) {
+        throw IllegalArgumentException(
+            "An account with this email already exists."
+        )
+    }
+
+    // Password rejected by Firebase for being weak
+    catch (e: FirebaseAuthWeakPasswordException) {
+        throw IllegalArgumentException(
+            "Password is too weak."
+        )
+    }
+
+    // Catch any other unexpected errors
+    catch (e: Exception) {
+        throw Exception(
+            "Something went wrong: ${e.message}"
+        )
     }
 }
 
@@ -52,16 +74,36 @@ suspend fun logIn(email: String, password: String): Boolean {
     { "Password cannot be blank." }
 
     return try {
+
+        // Attempt to sign user into Firebase
         Firebase.auth
             .signInWithEmailAndPassword(email, password)
+
+            // Wait until Firebase finishes request
             .await()
 
+        // Login successful
         true
-    } catch (e: FirebaseAuthInvalidUserException) {
-        throw IllegalArgumentException("No account found with this email.")
-    } catch (e: FirebaseAuthInvalidCredentialsException) {
-        throw IllegalArgumentException("Incorrect email or password.")
-    } catch (e: Exception) {
-        throw Exception("Something went wrong: ${e.message}")
+    }
+
+    // No user account found with provided email
+    catch (e: FirebaseAuthInvalidUserException) {
+        throw IllegalArgumentException(
+            "No account found with this email."
+        )
+    }
+
+    // Incorrect email or password
+    catch (e: FirebaseAuthInvalidCredentialsException) {
+        throw IllegalArgumentException(
+            "Incorrect email or password."
+        )
+    }
+
+    // Catch any unexpected errors
+    catch (e: Exception) {
+        throw Exception(
+            "Something went wrong: ${e.message}"
+        )
     }
 }

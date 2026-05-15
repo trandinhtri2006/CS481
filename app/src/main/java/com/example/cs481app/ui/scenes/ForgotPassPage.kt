@@ -63,17 +63,27 @@ class ForgotPassViewModel : ViewModel() {
     }
 }
 
+
+// FORGOT PASSWORD SCREEN
+// Allows user to reset password using email verification
+// Uses ViewModel for state handling and validation logic
 @Composable
 fun ForgotPassPage(
     navController: NavController,
+
+    // ViewModel handles input state + reset logic
     viewModel: ForgotPassViewModel = viewModel()
 ) {
+
+    // Full-screen container
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
 
+        // BACK BUTTON
+        // Returns user to login screen
         BackButton(
             navController,
             Routes.LOGIN_PAGE,
@@ -82,6 +92,9 @@ fun ForgotPassPage(
                 .padding(24.dp)
         )
 
+
+        // MAIN CONTENT LAYOUT
+        // Centered form content
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -90,6 +103,8 @@ fun ForgotPassPage(
             verticalArrangement = Arrangement.Center
         ) {
 
+
+            // APP LOGO
             Image(
                 modifier = Modifier.size(300.dp),
                 painter = painterResource(id = R.drawable.logo),
@@ -98,28 +113,48 @@ fun ForgotPassPage(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Email
+
+            // EMAIL INPUT FIELD
+            // Used to identify user account
             OutlinedTextField(
                 value = viewModel.userEmail,
+
+                // Updates email state in ViewModel
                 onValueChange = viewModel::onEmailChange,
+
                 label = { Text("Email") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // New password
+
+            // NEW PASSWORD INPUT FIELD
+            // User sets a new password
             OutlinedTextField(
                 value = viewModel.newPassword,
+
+                // Updates new password state in ViewModel
                 onValueChange = viewModel::onNewPassChange,
+
                 label = { Text("New Password") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
+
+            // RESET PASSWORD BUTTON
+            // Triggers password reset logic
             Button(
-                onClick = { viewModel.valid { navController.navigate(Routes.ACCOUNT_PAGE) } }
+                onClick = {
+
+                    // Validate inputs and reset password
+                    // Navigate to account page after success
+                    viewModel.valid {
+                        navController.navigate(Routes.ACCOUNT_PAGE)
+                    }
+                }
             ) {
                 Text("Reset Password")
             }

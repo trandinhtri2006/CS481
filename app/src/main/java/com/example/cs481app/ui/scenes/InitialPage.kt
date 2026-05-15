@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.cs481app.R
 
+
 @Composable
 fun InitialPage(navController: NavController) {
     Column(

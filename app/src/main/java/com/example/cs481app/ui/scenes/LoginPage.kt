@@ -54,17 +54,6 @@ class LoginViewModel : ViewModel() {
     }
 
     fun valid(onSuccess: () -> Unit) {
-//        viewModelScope.launch {
-//            try {
-//                logIn(userEmail, userPassword)
-//                onSuccess()
-//            } catch (e: IllegalArgumentException) {
-//                errorMessage = e.message.toString()
-//            } catch (e: Exception) {
-//                errorMessage = "Something went wrong: ${e.message}"
-//            }
-//        }
-
         if (userEmail.equals("admin", ignoreCase = false) and userPassword.equals("admin", ignoreCase = false)) {
             onSuccess()
         } else {
@@ -74,14 +63,26 @@ class LoginViewModel : ViewModel() {
 
 }
 
+
+// LOGIN SCREEN
+// Entry point of the app where users authenticate
+// Handles email/password login via ViewModel
 @Composable
 fun LoginPage(
     navController: NavController,
+
+    // ViewModel manages login state, input fields, and validation logic
     viewModel: LoginViewModel = viewModel()
 ) {
-    Box (
+
+    // Root container
+    Box(
         modifier = Modifier.background(Color.White)
     ) {
+
+
+        // MAIN CONTENT COLUMN
+        // Centers login form vertically
         Column(
             Modifier
                 .fillMaxSize()
@@ -90,11 +91,15 @@ fun LoginPage(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Logo or Title
+
+
+            // HEADER TEXT
             Text("Welcome To AccidentNow Witness Manager")
 
             Spacer(modifier = Modifier.height(32.dp))
 
+
+            // APP LOGO
             Image(
                 modifier = Modifier.size(300.dp),
                 painter = painterResource(id = R.drawable.logo),
@@ -103,7 +108,8 @@ fun LoginPage(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Email field
+
+            // EMAIL INPUT FIELD
             OutlinedTextField(
                 value = viewModel.userEmail,
                 onValueChange = viewModel::onEmailChange,
@@ -113,7 +119,8 @@ fun LoginPage(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Password field
+
+            // PASSWORD INPUT FIELD
             OutlinedTextField(
                 value = viewModel.userPassword,
                 onValueChange = viewModel::onPasswordChange,
@@ -123,6 +130,8 @@ fun LoginPage(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // ERROR MESSAGE DISPLAY
+            // Shown when login validation fails
             if (!viewModel.errorMessage.isBlank()) {
                 Text(
                     text = viewModel.errorMessage,
@@ -133,8 +142,14 @@ fun LoginPage(
                 Spacer(modifier = Modifier.height(15.dp))
             }
 
+            // LOGIN BUTTON
+            // Attempts authentication and navigates to Home screen on success
             Button(
-                onClick = { viewModel.valid { navController.navigate(Routes.HOME_PAGE) } },
+                onClick = {
+                    viewModel.valid {
+                        navController.navigate(Routes.HOME_PAGE)
+                    }
+                },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Log In")
@@ -142,18 +157,28 @@ fun LoginPage(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+
+            // NAVIGATION LINKS
+            // Forgot password + Register account
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
+
+                // Navigate to password recovery screen
                 TextButton(
-                    onClick = { navController.navigate(Routes.FORGOT_PASS_PAGE) }
+                    onClick = {
+                        navController.navigate(Routes.FORGOT_PASS_PAGE)
+                    }
                 ) {
                     Text("Forgot password?", color = Color.Blue)
                 }
 
+                // Navigate to registration screen
                 TextButton(
-                    onClick = { navController.navigate(Routes.REGISTER_PAGE) }
+                    onClick = {
+                        navController.navigate(Routes.REGISTER_PAGE)
+                    }
                 ) {
                     Text("Don't Have An Account?", color = Color.Blue)
                 }

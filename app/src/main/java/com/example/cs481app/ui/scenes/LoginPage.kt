@@ -54,10 +54,15 @@ class LoginViewModel : ViewModel() {
     }
 
     fun valid(onSuccess: () -> Unit) {
-        if (userEmail.equals("admin", ignoreCase = false) and userPassword.equals("admin", ignoreCase = false)) {
-            onSuccess()
-        } else {
-            errorMessage = "Wrong credentials"
+        viewModelScope.launch {
+            try {
+                logIn(userEmail, userPassword)
+                onSuccess()
+            } catch (e: IllegalArgumentException) {
+                errorMessage = e.message ?: "Invalid credentials"
+            } catch (e: Exception) {
+                errorMessage = e.message ?: "Login failed. Please try again."
+            }
         }
     }
 

@@ -87,4 +87,7 @@ dependencies {
 
     // Coroutines for Firebase .await() support
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+
+    // Firebase AI Logic (Gemini via Firebase)
+    implementation("com.google.firebase:firebase-ai")
 }

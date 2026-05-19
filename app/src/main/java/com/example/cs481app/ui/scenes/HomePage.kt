@@ -25,12 +25,10 @@ import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.NotificationsActive
-import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
@@ -70,28 +68,6 @@ fun HomePage(
                 navController = navController
             )
         },
-
-        // Floating Action Button (Question Mark button)
-        floatingActionButton = {
-
-            // Button opens AI assistant/help page
-            FloatingActionButton(
-                onClick = {
-
-                    // Navigate to AI chat screen
-                    navController.navigate(Routes.AI_CHATBOX)
-                },
-                containerColor = Color.Black
-            ) {
-
-                // Question mark icon inside button
-                Icon(
-                    imageVector = Icons.Default.QuestionMark,
-                    contentDescription = "AI Assistant help",
-                    tint = Color.White
-                )
-            }
-        }
 
     ) { paddingValues ->
 

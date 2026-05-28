@@ -9,9 +9,13 @@ data class Incident(
     val driverName: String = "",
     val licenseNumber: String = "",
     val insuranceInfo: String = "",
-    val otherPartyInfo: String = "",     // null if solo flow
-    val witnessInfo: String = "",        // null if no witnesses
+    val witnessInfo: List<Witness> = emptyList(),        // null if no witnesses
     val photoUrls: List<String> = emptyList(),
     val hash: String = "",              // SHA-256 hash of record
     val timestamp: Long = 0L           // timestamp
+)
+
+data class Witness(
+    var name: String = "",
+    var phone: String = ""
 )

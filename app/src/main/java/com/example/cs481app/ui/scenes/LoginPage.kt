@@ -31,7 +31,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.cs481app.R
-import com.example.cs481app.ui.Auth.logIn
+import com.example.cs481app.Auth.logIn
 import kotlinx.coroutines.launch
 
 

@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material.icons.filled.Send
@@ -21,7 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.cs481app.ui.ai.AIAssistantViewModel
+import com.example.cs481app.ai.AIAssistantViewModel
 
 // Expandable chat overlay — shown above all post-login screens via SceneNavigationGraph.
 // Uses ModalBottomSheet so it renders above the bottom nav bar without modifying individual screens.
@@ -201,7 +202,7 @@ private fun ChatInputBar(
                 elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 4.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Default.Send,
+                    imageVector = Icons.AutoMirrored.Filled.Send,
                     contentDescription = "Send message",
                     tint = Color.White
                 )

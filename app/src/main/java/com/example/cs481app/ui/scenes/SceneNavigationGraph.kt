@@ -1,5 +1,7 @@
 package com.example.cs481app.ui.scenes
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -19,7 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.cs481app.ui.ai.AIAssistantViewModel
+import com.example.cs481app.ai.AIAssistantViewModel
 
 // Routes that belong to the pre-login flow — the AI FAB is hidden on these.
 private val PRE_LOGIN_ROUTES = setOf(
@@ -29,6 +31,7 @@ private val PRE_LOGIN_ROUTES = setOf(
     Routes.FORGOT_PASS_PAGE
 )
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SceneNavigationGraph() {
     val navController = rememberNavController()
@@ -71,21 +74,6 @@ fun SceneNavigationGraph() {
                 SettingPage(navController)
             }
 
-            composable(Routes.ACCOUNT_PAGE) {
-                aiViewModel.setContext("account")
-                AccountPage(navController)
-            }
-
-            composable(Routes.CHANGE_EMAIL_PAGE) {
-                aiViewModel.setContext("change_email")
-                ChangeEmailPage(navController)
-            }
-
-            composable(Routes.CHANGE_PASSWORD_PAGE) {
-                aiViewModel.setContext("change_password")
-                ChangePasswordPage(navController)
-            }
-
             composable(Routes.REPORT_PAGE) {
                 aiViewModel.setContext("report")
                 ReportPage(navController)
@@ -98,7 +86,7 @@ fun SceneNavigationGraph() {
                 onClick = { showChat = true },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(end = 16.dp, bottom = 90.dp)
+                    .padding(end = 16.dp, bottom = 125.dp)
             )
         }
     }

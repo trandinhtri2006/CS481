@@ -1,4 +1,4 @@
-package com.example.cs481app.ui.ai
+package com.example.cs481app.ai
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf

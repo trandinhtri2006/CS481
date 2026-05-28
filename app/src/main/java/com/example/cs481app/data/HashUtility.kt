@@ -1,5 +1,6 @@
 package com.example.cs481app.data
 
+import com.example.cs481app.data.HashUtility.generateHash
 import java.security.MessageDigest
 
 //hash utility
@@ -18,7 +19,6 @@ object HashUtility {
             append(incident.driverName)
             append(incident.licenseNumber)
             append(incident.insuranceInfo)
-            append(incident.otherPartyInfo)
             append(incident.witnessInfo)
             append(incident.timestamp)
         }

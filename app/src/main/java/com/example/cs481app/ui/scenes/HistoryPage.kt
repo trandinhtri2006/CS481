@@ -18,96 +18,89 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import com.example.cs481app.data.FirestoreHandler
+import com.example.cs481app.data.Incident
+import kotlinx.coroutines.launch
+
+
+class HistoryViewModel : ViewModel() {
+
+    var incidents by mutableStateOf<List<Incident>>(emptyList())
+        private set
+
+    var isLoading by mutableStateOf(false)
+        private set
+
+    var errorMessage by mutableStateOf("")
+        private set
+
+    // Called once when the screen opens
+    fun loadIncidents() {
+        viewModelScope.launch {
+            isLoading = true
+            errorMessage = ""
+            try {
+                incidents = FirestoreHandler.getIncidents()
+            } catch (e: Exception) {
+                errorMessage = "Failed to load incidents: ${e.message}"
+            } finally {
+                isLoading = false
+            }
+        }
+    }
+}
+
 
 // HISTORY SCREEN
-// Displays a list of previous AI chat conversations
+// Displays all saved incident records for the current user.
+// Tapping a card navigates to the editable detail page.
 @Composable
 fun HistoryPage(
-    navController: NavController
+    navController: NavController,
+    viewModel: HistoryViewModel = viewModel()
 ) {
+    // Load incidents from Firestore when screen first appears
+    LaunchedEffect(Unit) { viewModel.loadIncidents() }
 
-    // STATIC CHAT HISTORY DATA
-    // Probably come from a database or API
-    val chatHistoryList: List<ChatHistory> = listOf(
-
-        ChatHistory(
-            title = "Emergency Assistance",
-            preview = "How do I contact nearby emergency services?",
-            time = "2 mins ago"
-        ),
-
-        ChatHistory(
-            title = "Medical Help",
-            preview = "What should I do during a panic attack?",
-            time = "1 hour ago"
-        ),
-
-        ChatHistory(
-            title = "Safety Report",
-            preview = "Create a safety incident report",
-            time = "Yesterday"
-        ),
-
-        ChatHistory(
-            title = "AI Assistant",
-            preview = "Nearest hospital information",
-            time = "2 days ago"
-        ),
-
-        ChatHistory(
-            title = "Account Support",
-            preview = "How do I reset my password?",
-            time = "1 week ago"
-        )
-    )
-
-
-    // SCREEN STRUCTURE
-    // Includes bottom navigation bar + content area
     Scaffold(
-
         bottomBar = {
             Bottombar(
                 homePage = false,
                 reportPage = false,
                 settingPage = false,
-                historyPage = true, // current active tab
+                historyPage = true,
                 navController = navController
             )
         }
-
     ) { paddingValues ->
 
-        // MAIN CONTENT LAYOUT
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -117,10 +110,9 @@ fun HistoryPage(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-
             // PAGE HEADER
             Text(
-                text = "Recent Conversations",
+                text = "Incident History",
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -128,62 +120,84 @@ fun HistoryPage(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = "Access your previous AI chats",
+                text = "Tap a record to view or edit",
                 color = Color.Gray,
                 fontSize = 15.sp
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
+            // LOADING STATE
+            if (viewModel.isLoading) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+                return@Scaffold
+            }
 
-            // CHAT HISTORY LIST
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(14.dp)
-            ) {
+            // ERROR STATE
+            if (viewModel.errorMessage.isNotBlank()) {
+                Text(
+                    text = viewModel.errorMessage,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                return@Scaffold
+            }
 
-                items(chatHistoryList) { chat ->
+            // EMPTY STATE
+            if (viewModel.incidents.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No incidents recorded yet.",
+                        color = Color.Gray,
+                        fontSize = 16.sp
+                    )
+                }
+                return@Scaffold
+            }
 
-                    // Each chat item rendered as a card
-                    HistoryCard(
-                        chat = chat,
+            // INCIDENT LIST
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+
+                items(viewModel.incidents) { incident ->
+                    IncidentCard(
+                        incident = incident,
                         onClick = {
-
-                            // Navigate to AI chat screen when clicked
-                            navController.navigate(Routes.AI_CHATBOX)
+                            // Navigate to the detail/edit page, passing the document ID
+                            navController.navigate("${Routes.INCIDENT_DETAIL_PAGE}/${incident.incidentId}")
                         }
                     )
                 }
 
-                // Extra spacing at bottom of list
-                item {
-                    Spacer(modifier = Modifier.height(30.dp))
-                }
+                item { Spacer(modifier = Modifier.height(30.dp)) }
             }
         }
     }
 }
 
 
-// HISTORY CARD COMPONENT
-// Displays a single chat history entry
+// INCIDENT CARD COMPONENT
+// Shows a summary of one incident record
 @Composable
-fun HistoryCard(
-    chat: ChatHistory,
+fun IncidentCard(
+    incident: Incident,
     onClick: () -> Unit
 ) {
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
-
-            // Make entire card clickable
             .clickable { onClick() },
-
         shape = RoundedCornerShape(22.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -191,8 +205,7 @@ fun HistoryCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-
-            // CHAT ICON
+            // ICON
             Box(
                 modifier = Modifier
                     .size(58.dp)
@@ -200,10 +213,9 @@ fun HistoryCard(
                     .background(Color.Black),
                 contentAlignment = Alignment.Center
             ) {
-
                 Icon(
-                    imageVector = Icons.Default.Chat,
-                    contentDescription = "Chat",
+                    imageVector = Icons.Default.Description,
+                    contentDescription = "Incident",
                     tint = Color.White,
                     modifier = Modifier.size(28.dp)
                 )
@@ -211,35 +223,18 @@ fun HistoryCard(
 
             Spacer(modifier = Modifier.width(16.dp))
 
-
-            // TEXT CONTENT SECTION
+            // TEXT CONTENT
             Column(modifier = Modifier.weight(1f)) {
 
-                // Chat title
-                Text(
-                    text = chat.title,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Chat preview message
-                Text(
-                    text = chat.preview,
-                    color = Color.Gray,
-                    fontSize = 14.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Timestamp
+                // Date
                 Text(
-                    text = chat.time,
+                    text = incident.date.ifBlank { "No date" },
                     color = Color.DarkGray,
                     fontSize = 12.sp
                 )
@@ -247,29 +242,12 @@ fun HistoryCard(
 
             Spacer(modifier = Modifier.width(10.dp))
 
-            // Right arrow indicator
+            // Right arrow
             Icon(
-                imageVector = Icons.Default.KeyboardArrowRight,
-                contentDescription = "Open Chat",
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = "Open Incident",
                 tint = Color.Gray
             )
         }
     }
-}
-
-
-// DATA MODEL
-// Represents a single chat history item
-data class ChatHistory(
-    val title: String,
-    val preview: String,
-    val time: String
-)
-
-
-// PREVIEW FUNCTION
-@Preview
-@Composable
-fun HistoryPreview() {
-    HistoryPage(rememberNavController())
 }

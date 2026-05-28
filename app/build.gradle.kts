@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.text)
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.firebase.auth)
+    implementation(libs.play.services.location)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -90,4 +91,11 @@ dependencies {
 
     // Firebase AI Logic (Gemini via Firebase)
     implementation("com.google.firebase:firebase-ai")
+
+    // Geolocation
+    implementation(libs.play.services.location)
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    // Uploading Photos
+    implementation("io.coil-kt:coil-compose:2.6.0")
 }

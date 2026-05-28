@@ -50,7 +50,7 @@ object StorageHandler {
     }
 
     //deleting a photo
-    //deletes a single photo from firebase stroage using its download url
+    //deletes a single photo from firebase storage using its download url
     suspend fun deletePhoto(downloadUrl: String) {
         try {
             val photoRef = storage.getReferenceFromUrl(downloadUrl)

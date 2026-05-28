@@ -1,5 +1,8 @@
 package com.example.cs481app.ui.scenes
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -37,6 +41,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
@@ -47,10 +52,12 @@ import androidx.navigation.compose.rememberNavController
 fun HomePage(
     navController: NavController
 ) {
-
     // Temporary username
     // Later this can come from a database or Firebase
     val name = "Tony"
+
+    // Grab context here at the composable level so it can be passed to dialNumber
+    val context = LocalContext.current
 
     // Scaffold provides the basic screen structure:
     // - Bottom navigation bar
@@ -69,7 +76,7 @@ fun HomePage(
             )
         },
 
-    ) { paddingValues ->
+        ) { paddingValues ->
 
         // Main vertical layout for the whole screen
         Column(
@@ -170,8 +177,15 @@ fun HomePage(
 
                 // Box allows content centering
                 Box(
-                    modifier = Modifier.fillMaxSize(),
-
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickable(
+                            enabled = true,
+                            onClick = {
+                                // Pass context to the shared dialNumber utility
+                                dialNumber(context, "+1-563-526-3773")
+                            }
+                        ),
                     // Center content inside circle
                     contentAlignment = Alignment.Center,
                 ) {
@@ -346,7 +360,10 @@ fun Bottombar(
     }
 }
 
-
+private fun dialNumber(context: Context, phoneNumber: String) {
+    val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNumber"))
+    context.startActivity(intent)
+}
 
 // COMPOSE PREVIEW
 // Used for Android Studio preview

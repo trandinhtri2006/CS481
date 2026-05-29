@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -182,6 +183,7 @@ fun RegisterPage(
                 value = viewModel.userPassword,
                 onValueChange = viewModel::onPasswordChange,
                 label = { Text("Password") },
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -192,6 +194,7 @@ fun RegisterPage(
                 value = viewModel.userConPassword,
                 onValueChange = viewModel::onConPasswordChange,
                 label = { Text("Confirm Password") },
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
             )
 

@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -133,11 +134,9 @@ fun ForgotPassPage(
             // User sets a new password
             OutlinedTextField(
                 value = viewModel.newPassword,
-
-                // Updates new password state in ViewModel
                 onValueChange = viewModel::onNewPassChange,
-
                 label = { Text("New Password") },
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -152,7 +151,7 @@ fun ForgotPassPage(
                     // Validate inputs and reset password
                     // Navigate to account page after success
                     viewModel.valid {
-                        navController.navigate(Routes.ACCOUNT_PAGE)
+                        navController.navigate(Routes.LOGIN_PAGE)
                     }
                 }
             ) {

@@ -31,6 +31,9 @@ class AIAssistantViewModel : ViewModel() {
     var currentAccidentType by mutableStateOf<String?>(null)
         private set
 
+    var currentStep by mutableStateOf<String?>(null)
+        private set
+
     // NOTE: Verify "gemini-3.1-flash-lite" is available in your Firebase AI Logic console.
     // If the model name is incorrect, replace it with the correct ID from:
     // https://firebase.google.com/docs/ai-logic/models
@@ -44,11 +47,19 @@ class AIAssistantViewModel : ViewModel() {
 
     fun setContext(screen: String, accidentType: String? = null) {
         currentScreen = screen
-        if (accidentType != null) currentAccidentType = accidentType
+        if (accidentType != null) {
+            currentAccidentType = accidentType
+            currentStep = "accident_type"
+        }
+    }
+
+    fun setStep(step: String) {
+        currentStep = step
     }
 
     fun clearAccidentContext() {
         currentAccidentType = null
+        currentStep = null
     }
 
     fun sendMessage(userText: String) {
@@ -75,7 +86,8 @@ class AIAssistantViewModel : ViewModel() {
     private fun buildPrompt(userMessage: String): String {
         val ctx = buildString {
             append("[Current screen: $currentScreen]")
-            currentAccidentType?.let { append(" [Selected accident type: $it]") }
+            currentAccidentType?.let { append(" [Accident type: $it]") }
+            currentStep?.let { append(" [Current step: $it]") }
         }
         return "$ctx\nUser: $userMessage"
     }
@@ -95,22 +107,24 @@ class AIAssistantViewModel : ViewModel() {
         private val SYSTEM_PROMPT = """
             You are an AI assistant embedded in AccidentNow Witness Manager (ANWM), a mobile app for documenting traffic accidents in the USA only.
 
-            YOUR ONLY PURPOSE is to guide users through accident reporting steps. You may:
+            YOUR PURPOSE is to help users understand and use the app, and to guide them through accident reporting. You may:
+            - Explain how to navigate and use the app's features (home screen, report flow, history, settings)
             - Clarify what information to collect at the current report step
             - Rephrase on-screen instructions in simpler terms when asked
             - Remind users which evidence categories to gather (photos, documents)
             - Provide general safety reminders relevant to the current step
+            - Answer general questions about what the app does and how to use it
 
             You must NEVER:
             - Provide legal advice of any kind
             - Determine or suggest fault for any party
             - Tell users to contact 911 or emergency services (the app handles emergency calls separately)
             - Validate, save, or modify any report data
-            - Discuss anything unrelated to accident reporting in this app
+            - Discuss anything completely unrelated to this app or accident documentation
             - Reference or ask for sensitive data: full license plate numbers, insurance policy numbers, photo contents, or completed report records
 
-            If asked anything outside accident reporting, reply exactly:
-            "I can only help with accident reporting steps. What would you like to know about your current step?"
+            If asked something entirely outside the scope of this app (e.g. general life advice, cooking, etc.), reply:
+            "I'm here to help you use AccidentNow Witness Manager. Is there something about the app or your accident report I can help with?"
 
             ── THE THREE ACCIDENT TYPES ──
 

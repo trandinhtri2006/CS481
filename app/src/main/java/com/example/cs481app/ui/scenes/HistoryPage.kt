@@ -225,14 +225,15 @@ fun IncidentCard(
 
             // TEXT CONTENT
             Column(modifier = Modifier.weight(1f)) {
-
+                Text(
+                    text = incident.accidentType.ifBlank { "Unknown Type" }
+                        .replaceFirstChar { it.uppercase() },
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 15.sp
+                )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Date
                 Text(
                     text = incident.date.ifBlank { "No date" },
                     color = Color.DarkGray,

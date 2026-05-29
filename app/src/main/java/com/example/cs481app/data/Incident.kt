@@ -9,10 +9,14 @@ data class Incident(
     val driverName: String = "",
     val licenseNumber: String = "",
     val insuranceInfo: String = "",
-    val witnessInfo: List<Witness> = emptyList(),        // null if no witnesses
+    val otherPartyName: String = "",     // multiparty only
+    val otherPartyPhone: String = "",    // multiparty only
+    val otherPartyLicense: String = "",  // multiparty only
+    val otherPartyInsurance: String = "", // multiparty only
+    val witnessInfo: List<Witness> = emptyList(),
     val photoUrls: List<String> = emptyList(),
-    val hash: String = "",              // SHA-256 hash of record
-    val timestamp: Long = 0L           // timestamp
+    val hash: String = "",
+    val timestamp: Long = 0L
 )
 
 data class Witness(

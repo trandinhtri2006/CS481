@@ -10,6 +10,8 @@ import kotlinx.coroutines.tasks.await
 // Represents a user's profile stored in Firestore
 // Default empty strings so Firestore deserialization works without a no-arg constructor issue
 data class UserProfile(
+    val firstName: String = "",
+    val lastName: String = "",
     val email: String = "",
     val licenseNumber: String = "",
     val insuranceProvider: String = "",

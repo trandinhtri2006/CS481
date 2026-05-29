@@ -8,7 +8,9 @@ object Routes {
     const val HOME_PAGE             = "HOME_PAGE"
     const val HISTORY_PAGE          = "HISTORY_PAGE"
     const val SETTING_PAGE          = "SETTING_PAGE"
-    const val ACCOUNT_PAGE          = "ACCOUNT_PAGE"
-    const val REPORT_PAGE           = "REPORT_PAGE"
-    const val INCIDENT_DETAIL_PAGE  = "INCIDENT_DETAIL_PAGE"
+    const val ACCOUNT_PAGE           = "ACCOUNT_PAGE"
+    const val REPORT_PAGE            = "REPORT_PAGE"
+    const val INCIDENT_DETAIL_PAGE   = "INCIDENT_DETAIL_PAGE"
+    const val CHANGE_PASSWORD_PAGE   = "CHANGE_PASSWORD_PAGE"
+    const val CHANGE_EMAIL_PAGE      = "CHANGE_EMAIL_PAGE"
 }

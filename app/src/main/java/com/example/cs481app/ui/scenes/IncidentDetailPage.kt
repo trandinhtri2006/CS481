@@ -68,6 +68,14 @@ class IncidentDetailViewModel(private val incidentId: String) : ViewModel() {
         private set
     var insuranceInfo by mutableStateOf("")
         private set
+    var otherPartyName by mutableStateOf("")
+        private set
+    var otherPartyPhone by mutableStateOf("")
+        private set
+    var otherPartyLicense by mutableStateOf("")
+        private set
+    var otherPartyInsurance by mutableStateOf("")
+        private set
 
     // Witnesses are a mutable list so rows can be added/removed dynamically
     val witnesses = mutableStateListOf<Witness>()
@@ -89,7 +97,11 @@ class IncidentDetailViewModel(private val incidentId: String) : ViewModel() {
     fun onLocationChange(v: String)     { location = v;       isSaved = false }
     fun onDriverNameChange(v: String)   { driverName = v;     isSaved = false }
     fun onLicenseChange(v: String)      { licenseNumber = v;  isSaved = false }
-    fun onInsuranceChange(v: String)    { insuranceInfo = v;  isSaved = false }
+    fun onInsuranceChange(v: String)      { insuranceInfo = v;       isSaved = false }
+    fun onOtherPartyNameChange(v: String)     { otherPartyName = v;     isSaved = false }
+    fun onOtherPartyPhoneChange(v: String)    { otherPartyPhone = v;    isSaved = false }
+    fun onOtherPartyLicenseChange(v: String)  { otherPartyLicense = v;  isSaved = false }
+    fun onOtherPartyInsuranceChange(v: String){ otherPartyInsurance = v; isSaved = false }
 
     // WITNESS LIST HELPERS
     fun addWitness()                              { witnesses.add(Witness()); isSaved = false }
@@ -113,7 +125,11 @@ class IncidentDetailViewModel(private val incidentId: String) : ViewModel() {
                 location      = incident.location
                 driverName    = incident.driverName
                 licenseNumber = incident.licenseNumber
-                insuranceInfo = incident.insuranceInfo
+                insuranceInfo     = incident.insuranceInfo
+                otherPartyName    = incident.otherPartyName
+                otherPartyPhone   = incident.otherPartyPhone
+                otherPartyLicense = incident.otherPartyLicense
+                otherPartyInsurance = incident.otherPartyInsurance
                 witnesses.clear()
                 witnesses.addAll(incident.witnessInfo)
             } catch (e: Exception) {
@@ -135,14 +151,18 @@ class IncidentDetailViewModel(private val incidentId: String) : ViewModel() {
                 val witnessData = witnesses.map { mapOf("name" to it.name, "phone" to it.phone) }
 
                 val updates: Map<String, Any> = mapOf(
-                    "accidentType"  to accidentType.trim(),
-                    "date"          to date.trim(),
-                    "time"          to time.trim(),
-                    "location"      to location.trim(),
-                    "driverName"    to driverName.trim(),
-                    "licenseNumber" to licenseNumber.trim(),
-                    "insuranceInfo" to insuranceInfo.trim(),
-                    "witnessInfo"   to witnessData
+                    "accidentType"      to accidentType.trim(),
+                    "date"              to date.trim(),
+                    "time"              to time.trim(),
+                    "location"          to location.trim(),
+                    "driverName"        to driverName.trim(),
+                    "licenseNumber"     to licenseNumber.trim(),
+                    "insuranceInfo"     to insuranceInfo.trim(),
+                    "otherPartyName"    to otherPartyName.trim(),
+                    "otherPartyPhone"   to otherPartyPhone.trim(),
+                    "otherPartyLicense" to otherPartyLicense.trim(),
+                    "otherPartyInsurance" to otherPartyInsurance.trim(),
+                    "witnessInfo"       to witnessData
                 )
                 FirestoreHandler.updateIncident(incidentId, updates)
                 isSaved = true
@@ -297,6 +317,36 @@ fun IncidentDetailPage(
                 minLines = 2,
                 maxLines = 4
             )
+
+            // OTHER PARTY SECTION — multiparty only
+            if (viewModel.accidentType == "multiparty") {
+                Text("Other Party Information", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+
+                OutlinedTextField(
+                    value = viewModel.otherPartyName,
+                    onValueChange = viewModel::onOtherPartyNameChange,
+                    label = { Text("Other Driver's Full Name") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = viewModel.otherPartyPhone,
+                    onValueChange = viewModel::onOtherPartyPhoneChange,
+                    label = { Text("Other Driver's Phone Number") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = viewModel.otherPartyLicense,
+                    onValueChange = viewModel::onOtherPartyLicenseChange,
+                    label = { Text("Other Driver's License Plate") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = viewModel.otherPartyInsurance,
+                    onValueChange = viewModel::onOtherPartyInsuranceChange,
+                    label = { Text("Other Driver's Insurance Info") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
 
             // WITNESSES SECTION
             Row(

@@ -138,9 +138,3 @@ private fun SettingsMenuItem(title: String, onClick: () -> Unit) {
         )
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun SettingPage_Preview() {
-    SettingPage(rememberNavController())
-}

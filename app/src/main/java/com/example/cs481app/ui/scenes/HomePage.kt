@@ -391,13 +391,3 @@ private fun dialNumber(context: Context, phoneNumber: String) {
     val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNumber"))
     context.startActivity(intent)
 }
-
-// COMPOSE PREVIEW
-// Used for Android Studio preview
-@Preview
-@Composable
-fun Homepage_Preview() {
-
-    // Preview HomePage with a temporary NavController
-    HomePage(rememberNavController())
-}

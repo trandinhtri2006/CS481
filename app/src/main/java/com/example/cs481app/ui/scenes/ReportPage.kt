@@ -625,10 +625,3 @@ private fun isOnline(context: Context): Boolean {
     val caps = cm.getNetworkCapabilities(network) ?: return false
     return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 }
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview
-@Composable
-fun Preview_ReportPage() {
-    ReportPage(rememberNavController())
-}

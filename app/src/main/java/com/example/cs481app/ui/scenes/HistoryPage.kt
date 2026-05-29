@@ -170,7 +170,6 @@ fun HistoryPage(
                     IncidentCard(
                         incident = incident,
                         onClick = {
-                            // Navigate to the detail/edit page, passing the document ID
                             navController.navigate("${Routes.INCIDENT_DETAIL_PAGE}/${incident.incidentId}")
                         }
                     )
@@ -252,3 +251,4 @@ fun IncidentCard(
         }
     }
 }
+

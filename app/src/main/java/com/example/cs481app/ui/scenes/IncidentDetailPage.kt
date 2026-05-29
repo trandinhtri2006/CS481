@@ -19,7 +19,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -133,7 +132,7 @@ class IncidentDetailViewModel(private val incidentId: String) : ViewModel() {
                 witnesses.clear()
                 witnesses.addAll(incident.witnessInfo)
             } catch (e: Exception) {
-                errorMessage = "Failed to load incident: ${e.message}"
+                errorMessage = "${e.message}"
             } finally {
                 isLoading = false
             }
@@ -202,7 +201,6 @@ class IncidentDetailViewModel(private val incidentId: String) : ViewModel() {
 
 // INCIDENT DETAIL / EDIT SCREEN
 // Displays all fields of one incident and allows the user to update or delete it.
-// Navigate here with: navController.navigate("${Routes.INCIDENT_DETAIL}/$incidentId")
 @Composable
 fun IncidentDetailPage(
     navController: NavController,
@@ -235,12 +233,6 @@ fun IncidentDetailPage(
             .background(Color.White)
     ) {
 
-        BackButton(
-            navController = navController,
-            pageName = Routes.HISTORY_PAGE,
-            modifier = Modifier.align(Alignment.TopStart)
-        )
-
         if (viewModel.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             return@Box
@@ -255,6 +247,11 @@ fun IncidentDetailPage(
                 .padding(top = 80.dp, bottom = 32.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            BackButton(
+                navController = navController,
+                pageName = Routes.HISTORY_PAGE,
+                modifier = Modifier.align(Alignment.Start)
+            )
 
             Text("Edit Incident", fontSize = 24.sp, fontWeight = FontWeight.Bold)
 

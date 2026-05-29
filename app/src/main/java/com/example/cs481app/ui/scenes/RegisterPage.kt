@@ -119,7 +119,6 @@ fun RegisterPage(
                 Button(
                     onClick = {
                         viewModel.dismissEmailSentDialog()
-                        if (!emailVerified()) deleteUser()
                         navController.navigate(Routes.LOGIN_PAGE)
                     }
                 ) {

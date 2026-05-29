@@ -251,7 +251,7 @@ fun HomePage(
                 Button(
                     onClick = {
                         showCallDialog = false
-                        dialNumber(context, "911")
+                        dialNumber(context, "563-526-3773")
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
                 ) { Text("Call 911", color = Color.White) }
@@ -390,14 +390,4 @@ fun Bottombar(
 private fun dialNumber(context: Context, phoneNumber: String) {
     val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNumber"))
     context.startActivity(intent)
-}
-
-// COMPOSE PREVIEW
-// Used for Android Studio preview
-@Preview
-@Composable
-fun Homepage_Preview() {
-
-    // Preview HomePage with a temporary NavController
-    HomePage(rememberNavController())
 }

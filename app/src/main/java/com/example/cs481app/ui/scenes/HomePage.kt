@@ -251,7 +251,7 @@ fun HomePage(
                 Button(
                     onClick = {
                         showCallDialog = false
-                        dialNumber(context, "911")
+                        dialNumber(context, "563-526-3773")
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
                 ) { Text("Call 911", color = Color.White) }

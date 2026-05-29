@@ -17,11 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.cs481app.ai.AIAssistantViewModel
+import java.sql.Types.NULL
 
 // Routes that belong to the pre-login flow — the AI FAB is hidden on these.
 private val PRE_LOGIN_ROUTES = setOf(
@@ -77,6 +80,11 @@ fun SceneNavigationGraph() {
             composable(Routes.REPORT_PAGE) {
                 aiViewModel.setContext("report")
                 ReportPage(navController)
+            }
+
+            composable("${Routes.INCIDENT_DETAIL_PAGE}/{incidentID}") { backStackEntry ->
+                val incidentID = backStackEntry.arguments?.getString("incidentID") ?: ""
+                IncidentDetailPage(navController, incidentID)
             }
         }
 

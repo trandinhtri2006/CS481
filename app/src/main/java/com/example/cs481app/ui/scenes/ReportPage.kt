@@ -126,6 +126,7 @@ fun ReportPage(navController: NavController) {
                     label = { Text("Accident Type") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
                     modifier = Modifier
+                        .menuAnchor()
                         .fillMaxWidth()
                 )
                 ExposedDropdownMenu(
@@ -222,7 +223,7 @@ fun ReportPage(navController: NavController) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // ── Photo Upload Section ──────────────────────────────────────
+            // Photo Upload Section
             Text(
                 text = "Photos",
                 style = MaterialTheme.typography.titleMedium
@@ -259,7 +260,6 @@ fun ReportPage(navController: NavController) {
                         "Photo Limit Reached (10/10)"
                 )
             }
-            // ─────────────────────────────────────────────────────────────
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -285,8 +285,9 @@ fun ReportPage(navController: NavController) {
                     )
 
                     scope.launch {
-                        dialogMessage = try {
+                        try {
                             saveIncident(incident)
+                            dialogMessage = "SUBMIT SUCCESSFULLY"
                         } catch (e: Exception) {
                             "Error: ${e.message}"
                         }

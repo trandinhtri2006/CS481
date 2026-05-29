@@ -70,7 +70,6 @@ import com.example.cs481app.ai.AIAssistantViewModel
 import com.example.cs481app.data.FirestoreHandler.saveIncident
 import com.example.cs481app.data.HashUtility
 import com.example.cs481app.data.Incident
-import com.example.cs481app.data.StorageHandler
 import com.example.cs481app.data.Witness
 import com.example.cs481app.geolocation.LocationHelper
 import kotlinx.coroutines.Dispatchers
@@ -467,18 +466,33 @@ fun ReportPage(navController: NavController, aiViewModel: AIAssistantViewModel? 
                                     aiViewModel?.setStep("review")
                                     scope.launch {
                                         dialogMessage = try {
-                                            val online = isOnline(context)
-
                                             var location = ""
                                             LocationHelper.getCurrentLocation(context) { lat, lon ->
                                                 location = "$lat,$lon"
                                             }
 
-                                            val photoUris = selectedPhotos.map { Uri.fromFile(File(it)) }
-                                            val uploadedUrls = if (online && photoUris.isNotEmpty())
-                                                StorageHandler.uploadPhotos(photoUris, incidentId)
-                                            else
-                                                emptyList()
+                                            val uploadedUrls = if (selectedPhotos.isNotEmpty()) {
+                                                withContext(Dispatchers.IO) {
+                                                    selectedPhotos.mapNotNull { path ->
+                                                        try {
+                                                            val file = File(path)
+                                                            val bitmap = android.graphics.BitmapFactory.decodeFile(file.absolutePath)
+                                                            val outputStream = java.io.ByteArrayOutputStream()
+                                                            bitmap.compress(
+                                                                android.graphics.Bitmap.CompressFormat.JPEG,
+                                                                50,
+                                                                outputStream
+                                                            )
+                                                            android.util.Base64.encodeToString(
+                                                                outputStream.toByteArray(),
+                                                                android.util.Base64.DEFAULT
+                                                            )
+                                                        } catch (e: Exception) {
+                                                            null
+                                                        }
+                                                    }
+                                                }
+                                            } else emptyList()
 
                                             val incident = Incident(
                                                 incidentId = incidentId,
@@ -499,8 +513,7 @@ fun ReportPage(navController: NavController, aiViewModel: AIAssistantViewModel? 
                                             )
                                             val hashedIncident = incident.copy(hash = HashUtility.generateHash(incident))
                                             saveIncident(hashedIncident)
-                                            if (online) "Report saved successfully."
-                                            else "Saved locally. Will sync automatically when you reconnect.\nNote: photos must be added when back online."
+                                            "Report saved successfully."
                                         } catch (e: Exception) {
                                             "Error: ${e.message}"
                                         }

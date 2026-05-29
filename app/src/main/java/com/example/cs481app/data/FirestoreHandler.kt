@@ -1,4 +1,5 @@
 package com.example.cs481app.data
+import android.util.Log
 
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -23,6 +24,7 @@ object FirestoreHandler {
     //saves a new incident to firestore
     suspend fun saveIncident(incident: Incident): String {
         val uid = getCurrentUID()
+        Log.d("FIRESTORE_DEBUG", "Current UID: $uid")
 
         return try {
             val docRef = db

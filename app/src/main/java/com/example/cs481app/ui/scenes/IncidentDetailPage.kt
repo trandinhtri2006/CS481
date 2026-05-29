@@ -1,16 +1,21 @@
 package com.example.cs481app.ui.scenes
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -31,10 +36,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -74,6 +83,8 @@ class IncidentDetailViewModel(private val incidentId: String) : ViewModel() {
     var otherPartyLicense by mutableStateOf("")
         private set
     var otherPartyInsurance by mutableStateOf("")
+        private set
+    var photoUrls by mutableStateOf<List<String>>(emptyList())
         private set
 
     // Witnesses are a mutable list so rows can be added/removed dynamically
@@ -129,6 +140,7 @@ class IncidentDetailViewModel(private val incidentId: String) : ViewModel() {
                 otherPartyPhone   = incident.otherPartyPhone
                 otherPartyLicense = incident.otherPartyLicense
                 otherPartyInsurance = incident.otherPartyInsurance
+                photoUrls     = incident.photoUrls
                 witnesses.clear()
                 witnesses.addAll(incident.witnessInfo)
             } catch (e: Exception) {
@@ -201,6 +213,7 @@ class IncidentDetailViewModel(private val incidentId: String) : ViewModel() {
 
 // INCIDENT DETAIL / EDIT SCREEN
 // Displays all fields of one incident and allows the user to update or delete it.
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun IncidentDetailPage(
     navController: NavController,
@@ -343,6 +356,38 @@ fun IncidentDetailPage(
                     label = { Text("Other Driver's Insurance Info") },
                     modifier = Modifier.fillMaxWidth()
                 )
+            }
+
+            // PHOTOS SECTION — displays Base64 encoded photos saved with the incident
+            if (viewModel.photoUrls.isNotEmpty()) {
+                Text("Photos", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    viewModel.photoUrls.forEach { base64String ->
+                        val bitmap = remember(base64String) {
+                            try {
+                                val bytes = android.util.Base64.decode(base64String, android.util.Base64.DEFAULT)
+                                android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                            } catch (e: Exception) {
+                                null
+                            }
+                        }
+                        bitmap?.let {
+                            androidx.compose.foundation.Image(
+                                bitmap = it.asImageBitmap(),
+                                contentDescription = "Incident photo",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(90.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .border(1.dp, Color.LightGray, RoundedCornerShape(8.dp))
+                            )
+                        }
+                    }
+                }
             }
 
             // WITNESSES SECTION
